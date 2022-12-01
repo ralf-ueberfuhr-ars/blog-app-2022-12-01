@@ -3,7 +3,8 @@
 ## Anwendung starten
 
 - main-Methode starten
-- `http://localhost:8080/` (WhiteLabel Error Page)
+- `http://localhost:9080/` (WhiteLabel Error Page)
+- `http://localhost:9080/posts/findall`
 
 oder:
 
