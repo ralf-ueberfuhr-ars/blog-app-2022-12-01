@@ -16,6 +16,7 @@
   - Konfiguration über Umgebungsvariablen (umfangreich)
   - Server als Teil der Anwendung (Serverless)
   - Integrationstests
+  - Starter Dependencies
 
 ## Anwendung starten
 

@@ -21,21 +21,18 @@ public class BlogPostService {
           BlogPost.builder()
             .title("Mein erster Post")
             .content("Lorem ipsum...")
-            .timestamp(LocalDateTime.now())
             .build()
         );
         this.addPost(
           BlogPost.builder()
             .title("Mein zweiter Post")
             .content("Lorem ipsum...")
-            .timestamp(LocalDateTime.now())
             .build()
         );
         this.addPost(
           BlogPost.builder()
             .title("Mein dritter Post")
             .content("Lorem ipsum...")
-            .timestamp(LocalDateTime.now())
             .build()
         );
     }
@@ -50,6 +47,7 @@ public class BlogPostService {
 
     public void addPost(BlogPost post) {
         post.setId(counter++);
+        post.setTimestamp(LocalDateTime.now());
         this.posts.put(post.getId(), post);
     }
 

@@ -18,9 +18,7 @@ public class BlogPostController {
     @GetMapping("/findall")
     @ResponseBody
     public Collection<BlogPost> getBlogPosts() {
-
         return service.findPosts();
-
     }
 
 }
