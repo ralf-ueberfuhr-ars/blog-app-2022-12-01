@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Post App</title>
+</head>
+<body>
+
+<h1>Blog Post App</h1>
+Welcome!
+<ul>
+    <li><a href="./posts/findall">Alle Posts (JSON)</a></li>
+    <li><a href="./posts/find?id=1">Post mit ID 1 (JSON)</a></li>
+    <li>
+        <form action="./posts/find" method="get">
+            <label for="txtId">Nach ID suchen:</label>
+            <input name="id" type="number" id="txtId" required placeholder="(ID eingeben)">
+            <input type="submit">
+        </form>
+    </li>
+</ul>
+
+</body>
+</html>
