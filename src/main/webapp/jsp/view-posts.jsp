@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blog Post App</title>
+    <title><c:out value="${appConfig.title}"/></title>
 </head>
 <body>
     <h1>Blog Posts</h1>

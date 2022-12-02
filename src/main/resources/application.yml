@@ -5,3 +5,5 @@ spring:
     view:
       prefix: /jsp/
       suffix: .jsp
+blog-app:
+  title: Blog Post App from Ralf
