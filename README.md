@@ -13,6 +13,7 @@
 ### Spring Boot
 
 - Cloud-Native
+  - Convention over Configuration 
   - Konfiguration über Umgebungsvariablen (umfangreich)
   - Server als Teil der Anwendung (Serverless)
   - Integrationstests
