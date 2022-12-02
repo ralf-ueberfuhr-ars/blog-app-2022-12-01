@@ -1,5 +1,6 @@
 package de.schulung.samples.blog;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -102,6 +104,29 @@ class BlogPostControllerMvcTests {
         mvc.perform(get("/posts/find?id=gelbekatze"))
           .andExpect(status().isBadRequest());
         verify(service, never()).findPostById(anyLong());
+    }
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Test
+    void shouldReturnCorrectJSON() throws Exception {
+        BlogPost originalBlogPost = BlogPost.builder()
+          .id(1L)
+          .title("test")
+          .content("test")
+          .timestamp(LocalDateTime.of(2022, Month.JANUARY, 10, 10, 0, 0))
+          .build();
+        when(service.findPostById(1L)).thenReturn(Optional.of(originalBlogPost));
+
+        String body = mvc.perform(get("/posts/find?id=1"))
+          .andExpect(status().isOk())
+          .andReturn().getResponse().getContentAsString();
+        BlogPost resultBlogPost = objectMapper.readValue(body, BlogPost.class);
+
+        assertThat(resultBlogPost).isEqualTo(originalBlogPost);
+        verify(service).findPostById(eq(1L));
+
     }
 
 }
