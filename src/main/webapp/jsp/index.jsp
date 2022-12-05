@@ -24,6 +24,8 @@
 </ul>
 <h2>Create a blog post</h2>
 <!-- Spring MVC support: see https://www.baeldung.com/spring-mvc-form-tutorial -->
+<!-- Test controller validation: enter a title less that 3 chars-->
+<!-- Test service validation (not handled by controller): enter valid title (>=3 chars) and a content less than 10 chars-->
 <form action="./posts/create" method="post">
     <label for="txtTitle">Title: </label><br>
     <input type="text" required id="txtTitle" name="title"><br>
