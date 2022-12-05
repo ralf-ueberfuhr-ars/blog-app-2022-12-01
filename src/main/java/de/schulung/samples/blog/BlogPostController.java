@@ -12,13 +12,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Collection;
 
 @Controller
-@RequestMapping("/posts")
+@RequestMapping(BlogPostController.CONTROLLER_MAPPING)
 @RequiredArgsConstructor
 public class BlogPostController {
 
+    public static final String CONTROLLER_MAPPING = "/posts";
+    public static final String VIEW_POSTS_MAPPING = "/view.html";
+
     private final BlogPostService service;
 
-    @GetMapping("/view.html")
+    @GetMapping(BlogPostController.VIEW_POSTS_MAPPING)
     public String viewBlogPosts(Model model) {
         // BlogPosts ermitteln
         Collection<BlogPost> posts = service.findPosts();
@@ -51,7 +54,9 @@ public class BlogPostController {
           .content(content)
           .build();
         service.addPost(post);
-        return "redirect:/posts/view.html";
+        return "redirect:"
+          + BlogPostController.CONTROLLER_MAPPING
+          + BlogPostController.VIEW_POSTS_MAPPING;
 
     }
 
