@@ -1,12 +1,14 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Blog Post App</title>
+    <title><c:out value="${appConfig.title}"/></title>
 </head>
 <body>
 
-<h1>Blog Post App</h1>
+<h1><c:out value="${appConfig.title}"/></h1>
 Welcome!
 <ul>
     <li><a href="./posts/view.html">Alle Posts (HTML view)</a></li>
