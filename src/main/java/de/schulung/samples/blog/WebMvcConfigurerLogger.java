@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Component
 @Slf4j
 @Profile("dev")
-public class WebMvcConfigurerLogger {
+public class WebMvcConfigurerLogger implements BlogPostProvider {
 
     @EventListener(ContextRefreshedEvent.class)
     public void logWebMvcConfigurersOnEvent(ContextRefreshedEvent evt) {
@@ -21,4 +21,11 @@ public class WebMvcConfigurerLogger {
           .forEach(log::info);
     }
 
+    @Override
+    public BlogPost createBlogPost() {
+        return BlogPost.builder()
+          .title("Web MVC Configurers")
+          .content("Bitte prüfe die Konsolenausgaben (Logger: " + log.getName() + ").")
+          .build();
+    }
 }

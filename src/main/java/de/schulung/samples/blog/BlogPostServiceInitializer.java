@@ -6,36 +6,25 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class BlogPostServiceInitializer {
 
     private final BlogPostService service;
+    private final List<BlogPostProvider> providers;
 
     @EventListener(ContextRefreshedEvent.class)
     public void initializeSampleData() {
-        // TODO we could provide multiple sample data providers here for injection (initial or inclusion)
         if (service.getCount() == 0) {
             log.info("Initializing blog post service with sample data");
-            service.addPost(
-              BlogPost.builder()
-                .title("Mein erster Post")
-                .content("Lorem ipsum...")
-                .build()
-            );
-            service.addPost(
-              BlogPost.builder()
-                .title("Mein zweiter Post")
-                .content("Lorem ipsum...")
-                .build()
-            );
-            service.addPost(
-              BlogPost.builder()
-                .title("Mein dritter Post")
-                .content("Lorem ipsum...")
-                .build()
-            );
+            providers.stream()
+              .map(BlogPostProvider::createBlogPost)
+              .filter(Objects::nonNull)
+              .forEach(service::addPost);
         }
     }
 
