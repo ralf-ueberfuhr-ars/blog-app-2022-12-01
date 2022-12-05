@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
 @RequiredArgsConstructor
-public class BlogPostAppConfigurationPropertiesControllerAdvice {
+public class BlogAppConfigurationPropertiesControllerAdvice {
 
     public static final String MODEL_NAME = "appConfig";
 
