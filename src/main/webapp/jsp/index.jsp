@@ -9,7 +9,7 @@
 <body>
 
 <h1><c:out value="${appConfig.title}"/></h1>
-Welcome!
+<h2>Welcome</h2>
 <ul>
     <li><a href="./posts/view.html">Alle Posts (HTML view)</a></li>
     <li><a href="./posts/findall">Alle Posts (JSON)</a></li>
@@ -22,6 +22,15 @@ Welcome!
         </form>
     </li>
 </ul>
+<h2>Create a blog post</h2>
+<!-- Spring MVC support: see https://www.baeldung.com/spring-mvc-form-tutorial -->
+<form action="./posts/create" method="post">
+    <label for="txtTitle">Title: </label><br>
+    <input type="text" required id="txtTitle" name="title"><br>
+    <label for="txtContent">Content:</label><br>
+    <textarea id="txtContent" name="content" required></textarea><br>
+    <input type="submit">
+</form>
 
 </body>
 </html>
