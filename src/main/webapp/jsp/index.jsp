@@ -27,6 +27,9 @@
 <form action="./posts/create" method="post">
     <label for="txtTitle">Title: </label><br>
     <input type="text" required id="txtTitle" name="title"><br>
+    <c:if test="${param.error eq 'title'}">
+        <span style="color: red;">Mindestens 3 Zeichen!</span><br>
+    </c:if>
     <label for="txtContent">Content:</label><br>
     <textarea id="txtContent" name="content" required></textarea><br>
     <input type="submit">
