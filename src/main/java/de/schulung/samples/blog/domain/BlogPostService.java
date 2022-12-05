@@ -1,4 +1,4 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.domain;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;

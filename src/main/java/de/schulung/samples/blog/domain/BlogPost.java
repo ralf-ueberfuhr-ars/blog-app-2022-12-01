@@ -1,4 +1,4 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.domain;
 
 import lombok.Builder;
 import lombok.Data;

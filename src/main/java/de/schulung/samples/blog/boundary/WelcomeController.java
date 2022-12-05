@@ -1,4 +1,4 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.boundary;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

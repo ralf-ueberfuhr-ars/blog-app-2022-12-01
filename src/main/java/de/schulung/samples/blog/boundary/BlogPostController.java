@@ -1,5 +1,7 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.boundary;
 
+import de.schulung.samples.blog.domain.BlogPost;
+import de.schulung.samples.blog.domain.BlogPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,12 +34,14 @@ public class BlogPostController {
 
     @GetMapping("/findall")
     @ResponseBody
+    // TODO use boundary model
     public Collection<BlogPost> getBlogPosts() {
         return service.findPosts();
     }
 
     @GetMapping("/find")
     @ResponseBody
+    // TODO use boundary model
     public BlogPost getBlogPost(@RequestParam("id") long id) {
         return service.findPostById(id).orElse(null);
     }

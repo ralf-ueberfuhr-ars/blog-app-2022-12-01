@@ -1,5 +1,6 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.boundary.config;
 
+import de.schulung.samples.blog.shared.config.BlogAppConfigurationProperties;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
