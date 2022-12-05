@@ -16,7 +16,6 @@ import java.util.Collection;
 public class BlogPostController {
 
     private final BlogPostService service;
-    private final BlogAppConfigurationProperties appConfig;
 
     @GetMapping("/view.html")
     public String viewBlogPosts(Model model) {
@@ -24,7 +23,6 @@ public class BlogPostController {
         Collection<BlogPost> posts = service.findPosts();
         // Weitergeben der Posts an die JSP
         model.addAttribute("posts", posts);
-        model.addAttribute("appConfig", appConfig);
         return "view-posts";
     }
 
