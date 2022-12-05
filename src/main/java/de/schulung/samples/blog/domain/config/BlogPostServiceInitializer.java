@@ -1,5 +1,6 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.domain.config;
 
+import de.schulung.samples.blog.domain.BlogPostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.ContextRefreshedEvent;

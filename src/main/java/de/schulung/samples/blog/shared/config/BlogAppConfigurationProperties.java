@@ -1,4 +1,4 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.shared.config;
 
 import lombok.Getter;
 import lombok.Setter;

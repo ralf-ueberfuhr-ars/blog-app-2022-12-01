@@ -1,5 +1,7 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.boundary.config;
 
+import de.schulung.samples.blog.domain.config.BlogPostProvider;
+import de.schulung.samples.blog.domain.BlogPost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;

@@ -1,5 +1,6 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.domain.config;
 
+import de.schulung.samples.blog.domain.BlogPost;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

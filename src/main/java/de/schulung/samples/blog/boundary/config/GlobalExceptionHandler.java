@@ -1,4 +1,4 @@
-package de.schulung.samples.blog;
+package de.schulung.samples.blog.boundary.config;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
