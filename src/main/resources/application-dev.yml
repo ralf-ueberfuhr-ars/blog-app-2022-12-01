@@ -1,0 +1,5 @@
+# valid, if "dev" profile is enabled
+blog-app:
+  title: Blog Post App in DEV Stage!
+server:
+  port: 9080

@@ -1,5 +1,4 @@
-server:
-  port: 9080
+# always valid, but can be overwritten in profiles
 spring:
   mvc:
     view:
