@@ -16,25 +16,8 @@ public class BlogPostService {
 
     private static long counter = 0L;
 
-    {
-        this.addPost(
-          BlogPost.builder()
-            .title("Mein erster Post")
-            .content("Lorem ipsum...")
-            .build()
-        );
-        this.addPost(
-          BlogPost.builder()
-            .title("Mein zweiter Post")
-            .content("Lorem ipsum...")
-            .build()
-        );
-        this.addPost(
-          BlogPost.builder()
-            .title("Mein dritter Post")
-            .content("Lorem ipsum...")
-            .build()
-        );
+    public int getCount() {
+        return posts.size();
     }
 
     public Collection<BlogPost> findPosts() {
