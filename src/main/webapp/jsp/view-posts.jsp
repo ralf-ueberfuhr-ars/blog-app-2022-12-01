@@ -15,6 +15,5 @@
             <c:out value="${post.content}"/>
         </p>
     </c:forEach>
-    ${posts}
 </body>
 </html>
