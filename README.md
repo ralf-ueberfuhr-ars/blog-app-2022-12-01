@@ -37,3 +37,9 @@ oder:
 mvn clean package
 java -jar target/blog-app-0.0.1-SNAPSHOT.jar
 ```
+
+Mit `dev-Profil:
+
+```bash
+java -jar target/blog-app-0.0.1-SNAPSHOT.jar -Dspring.profiles.active=dev
+```
