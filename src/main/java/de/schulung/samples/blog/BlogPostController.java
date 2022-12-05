@@ -48,15 +48,18 @@ public class BlogPostController {
       String title,
       @RequestParam("content")
       String content) {
-
-        BlogPost post = BlogPost.builder()
-          .title(title)
-          .content(content)
-          .build();
-        service.addPost(post);
-        return "redirect:"
-          + BlogPostController.CONTROLLER_MAPPING
-          + BlogPostController.VIEW_POSTS_MAPPING;
+        if(title.length()<3) {
+            return "redirect:/index.html?error=title";
+        } else {
+            BlogPost post = BlogPost.builder()
+              .title(title)
+              .content(content)
+              .build();
+            service.addPost(post);
+            return "redirect:"
+              + BlogPostController.CONTROLLER_MAPPING
+              + BlogPostController.VIEW_POSTS_MAPPING;
+        }
 
     }
 
