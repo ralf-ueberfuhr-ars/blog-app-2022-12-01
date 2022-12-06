@@ -5,6 +5,9 @@ import de.schulung.samples.blog.domain.HashTagSink;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class JpaHashTagSink implements HashTagSink {
@@ -22,5 +25,12 @@ public class JpaHashTagSink implements HashTagSink {
     @Override
     public void save(HashTag hashtag) {
         repo.save(mapper.map(hashtag));
+    }
+
+    @Override
+    public Collection<HashTag> findAll() {
+        return repo.findAll().stream()
+          .map(mapper::map)
+          .collect(Collectors.toList());
     }
 }

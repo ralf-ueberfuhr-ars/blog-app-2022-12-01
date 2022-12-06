@@ -17,6 +17,7 @@
     <li><a href="./posts/view.html">Alle Posts (HTML view)</a></li>
     <li><a href="./posts/findall">Alle Posts (JSON)</a></li>
     <li><a href="./posts/find?id=1">Post mit ID 1 (JSON)</a></li>
+    <li><a href="./tags/findall">Alle Tags</a></li>
     <li>
         <form action="./posts/find" method="get">
             <label for="txtId">Nach ID suchen:</label>
@@ -48,6 +49,20 @@
         </c:if>
         <label for="txtContent">Content:</label><br>
         <textarea id="txtContent" name="content" required></textarea><br>
+        <label for="txtHashTags">HashTags (sep. by ',', e.g. "private,debug,spring"):</label><br>
+        <input type="text" id="txtHashTags" name="hashTags"></textarea><br>
+        <input type="submit">
+    </form>
+    <h2>Describe HashTag</h2>
+    <!-- Spring MVC support: see https://www.baeldung.com/spring-mvc-form-tutorial -->
+    <!-- Test controller validation: enter a title less that 3 chars-->
+    <!-- Test service validation (not handled by controller): enter valid title (>=3 chars) and a content less than 10 chars-->
+    <form action="./tags/save" method="post">
+        <sec:csrfInput/>
+        <label for="txtName">Name: </label><br>
+        <input type="text" required id="txtName" name="name"><br>
+        <label for="txtDescription">Description:</label><br>
+        <input type="text" id="txtDescription" name="description"></textarea><br>
         <input type="submit">
     </form>
 </sec:authorize>

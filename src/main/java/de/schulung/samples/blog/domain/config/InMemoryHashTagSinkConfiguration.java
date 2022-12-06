@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +34,11 @@ public class InMemoryHashTagSinkConfiguration {
         @Override
         public void save(HashTag hashtag) {
             this.tags.put(hashtag.getName(), hashtag);
+        }
+
+        @Override
+        public Collection<HashTag> findAll() {
+            return this.tags.values();
         }
     }
 

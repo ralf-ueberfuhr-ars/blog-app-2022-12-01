@@ -2,6 +2,7 @@ package de.schulung.samples.blog.boundary;
 
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
+import de.schulung.samples.blog.domain.HashTag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -13,7 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+
+import static java.util.function.Predicate.not;
 
 @Controller
 @RequestMapping(BlogPostController.CONTROLLER_MAPPING)
@@ -55,9 +60,11 @@ public class BlogPostController {
       String title,
       @RequestParam("content")
       String content,
+      @RequestParam(value = "hashTags", required = false)
+      String hashTags,
       Authentication authentication
     ) {
-        if(title.length()<3) {
+        if (title.length() < 3) {
             return "redirect:/index.html?error=title";
         } else {
             BlogPost post = BlogPost.builder()
@@ -65,6 +72,16 @@ public class BlogPostController {
               .content(content)
               .author(authentication.getName())
               .build();
+            if (null != hashTags) {
+                post.setHashTags(
+                  Arrays.stream(hashTags.split(","))
+                    .filter(not(String::isBlank))
+                    .map(String::trim)
+                    .map(String::toLowerCase)
+                    .map(name -> HashTag.builder().name(name).build())
+                    .collect(Collectors.toList())
+                );
+            }
             service.addPost(post);
             return "redirect:"
               + BlogPostController.CONTROLLER_MAPPING
