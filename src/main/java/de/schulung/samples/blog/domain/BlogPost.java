@@ -6,6 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,6 +21,6 @@ public class BlogPost {
     private String content;
     private LocalDateTime timestamp;
     private String author;
-
+    private List<HashTag> hashTags;
 
 }
