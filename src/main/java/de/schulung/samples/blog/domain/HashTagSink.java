@@ -1,6 +1,7 @@
 package de.schulung.samples.blog.domain;
 
 import javax.validation.Valid;
+import java.util.Collection;
 
 public interface HashTagSink {
 
@@ -18,5 +19,7 @@ public interface HashTagSink {
      * @param hashtag the hash tag
      */
     void save(@Valid HashTag hashtag);
+
+    Collection<HashTag> findAll();
 
 }
