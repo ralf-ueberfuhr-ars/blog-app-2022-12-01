@@ -14,19 +14,30 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BlogPostService {
 
-    // TODO use Lombok's @Delegate?
     private final BlogPostSink sink;
+    private final HashTagResolver hashTagResolver;
 
     public int getCount() {
         return sink.getCount();
     }
 
     public Collection<BlogPost> findPosts() {
-        return sink.findPosts();
+        final var result = sink.findPosts();
+        result.stream()
+          .map(BlogPost::getHashTags)
+          .flatMap(Collection::stream)
+          .forEach(hashTagResolver::resolve);
+        return result;
     }
 
     public Optional<BlogPost> findPostById(long id) {
-        return sink.findPostById(id);
+        final var result = sink.findPostById(id);
+        result
+          .stream()
+          .map(BlogPost::getHashTags)
+          .flatMap(Collection::stream)
+          .forEach(hashTagResolver::resolve);
+        return result;
     }
 
     public void addPost(@Valid BlogPost post) {

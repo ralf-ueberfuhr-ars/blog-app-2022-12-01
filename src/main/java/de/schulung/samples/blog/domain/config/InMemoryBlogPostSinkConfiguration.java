@@ -20,7 +20,7 @@ public class InMemoryBlogPostSinkConfiguration {
     @Bean
     @ConditionalOnMissingBean(BlogPostSink.class)
     BlogPostSink inMemoryBlogPostSink() {
-        log.info("Creating in-memory sink.");
+        log.info("Creating in-memory blog post sink.");
         return new InMemoryBlogPostSink();
     }
 

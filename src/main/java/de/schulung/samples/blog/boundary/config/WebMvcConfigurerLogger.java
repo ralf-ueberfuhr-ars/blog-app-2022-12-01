@@ -1,13 +1,16 @@
 package de.schulung.samples.blog.boundary.config;
 
-import de.schulung.samples.blog.domain.config.BlogPostProvider;
 import de.schulung.samples.blog.domain.BlogPost;
+import de.schulung.samples.blog.domain.HashTag;
+import de.schulung.samples.blog.domain.config.BlogPostProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Component
 @Slf4j
@@ -28,6 +31,7 @@ public class WebMvcConfigurerLogger implements BlogPostProvider {
         return BlogPost.builder()
           .title("Web MVC Configurers")
           .content("Bitte prüfe die Konsolenausgaben (Logger: " + log.getName() + ").")
+          .hashTags(List.of(HashTag.builder().name("debug").build()))
           .build();
     }
 }
