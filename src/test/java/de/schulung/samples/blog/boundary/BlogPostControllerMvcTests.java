@@ -3,11 +3,15 @@ package de.schulung.samples.blog.boundary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -17,23 +21,32 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser(roles = "READER")
 class BlogPostControllerMvcTests {
 
     @MockBean
     BlogPostService service;
     @Autowired
     MockMvc mvc;
+
+    @BeforeEach
+    void setup() {
+        // clean invocations during setup
+        Mockito.reset(service);
+    }
 
     /*
      * Request:
@@ -129,6 +142,29 @@ class BlogPostControllerMvcTests {
         assertThat(resultBlogPost).isEqualTo(originalBlogPost);
         verify(service).findPostById(eq(1L));
 
+    }
+
+    @Test
+    void shouldReturn401OnCreateBlogPost() throws Exception {
+        mvc.perform(
+          post("/posts/create")
+            .param("title", "title")
+            .param("content", "titletitle")
+        ).andExpect(status().isForbidden());
+        verify(service, never()).addPost(any());
+    }
+
+    @Test
+    @WithMockUser(value = "testuser", roles = "AUTHOR")
+    void shouldReturn200OnCreateBlogPost() throws Exception {
+        ArgumentCaptor<BlogPost> captor = ArgumentCaptor.forClass(BlogPost.class);
+        mvc.perform(
+          post("/posts/create")
+            .param("title", "title")
+            .param("content", "titletitle")
+        ).andExpect(status().is3xxRedirection());
+        verify(service).addPost(captor.capture());
+        assertThat(captor.getValue().getAuthor()).isEqualTo("testuser");
     }
 
 }

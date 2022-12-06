@@ -3,6 +3,8 @@ package de.schulung.samples.blog.boundary;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,17 +49,21 @@ public class BlogPostController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('AUTHOR')") // TODO create custom expression to check SecurityRole
     public String createBlogPost(
       @RequestParam("title")
       String title,
       @RequestParam("content")
-      String content) {
+      String content,
+      Authentication authentication
+    ) {
         if(title.length()<3) {
             return "redirect:/index.html?error=title";
         } else {
             BlogPost post = BlogPost.builder()
               .title(title)
               .content(content)
+              .author(authentication.getName())
               .build();
             service.addPost(post);
             return "redirect:"
