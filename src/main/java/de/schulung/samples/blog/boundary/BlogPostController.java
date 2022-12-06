@@ -31,9 +31,9 @@ public class BlogPostController {
     private final BlogPostService service;
 
     @GetMapping(BlogPostController.VIEW_POSTS_MAPPING)
-    public String viewBlogPosts(Model model) {
+    public String viewBlogPosts(Model model, @RequestParam(value = "tag", required = false) String tag) {
         // BlogPosts ermitteln
-        Collection<BlogPost> posts = service.findPosts();
+        Collection<BlogPost> posts = null == tag || tag.isEmpty() ? service.findPosts() : service.findPostsByTag(tag);
         // Weitergeben der Posts an die JSP
         model.addAttribute("posts", posts);
         return "view-posts";

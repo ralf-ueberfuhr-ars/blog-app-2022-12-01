@@ -9,6 +9,8 @@ public interface BlogPostSink {
 
     Collection<BlogPost> findPosts();
 
+    Collection<BlogPost> findPostsByTag(String name);
+
     Optional<BlogPost> findPostById(long id);
 
     void addPost(BlogPost post);
