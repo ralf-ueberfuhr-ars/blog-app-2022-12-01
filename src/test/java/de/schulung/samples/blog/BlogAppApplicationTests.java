@@ -1,9 +1,8 @@
 package de.schulung.samples.blog;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@BlogAppTest
 class BlogAppApplicationTests {
 
 	@Test

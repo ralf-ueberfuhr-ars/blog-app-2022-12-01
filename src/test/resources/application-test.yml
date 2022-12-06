@@ -1,0 +1,12 @@
+spring:
+  main:
+    lazy-initialization: true
+#    allow-bean-definition-overriding: true
+# This slows down test performance
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        test:
+#          context:
+#            cache: DEBUG

@@ -1,6 +1,5 @@
 package de.schulung.samples.blog.boundary;
 
-import de.schulung.samples.blog.boundary.BlogPostController;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
 import org.junit.jupiter.api.Test;
