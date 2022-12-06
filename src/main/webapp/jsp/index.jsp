@@ -13,6 +13,7 @@
 <sec:authentication property="name" var="username"/>
 <h2>Welcome<c:if test="${not empty username}">, <c:out value="${username}"/></c:if></h2>
 <ul>
+    <li><a href="./h2-console">H2 Console</a></li>
     <li><a href="./posts/view.html">Alle Posts (HTML view)</a></li>
     <li><a href="./posts/findall">Alle Posts (JSON)</a></li>
     <li><a href="./posts/find?id=1">Post mit ID 1 (JSON)</a></li>
