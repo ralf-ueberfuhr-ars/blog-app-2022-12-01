@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Configuration
 @Slf4j
@@ -36,6 +37,16 @@ public class InMemoryBlogPostSinkConfiguration {
 
         public Collection<BlogPost> findPosts() {
             return posts.values();
+        }
+
+        @Override
+        public Collection<BlogPost> findPostsByTag(String name) {
+            return findPosts().stream()
+              .filter(bp -> bp.getHashTags()
+                .stream()
+                .anyMatch(tag -> tag.getName().equalsIgnoreCase(name))
+              )
+              .collect(Collectors.toList());
         }
 
         public Optional<BlogPost> findPostById(long id) {

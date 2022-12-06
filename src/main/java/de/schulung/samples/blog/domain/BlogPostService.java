@@ -30,6 +30,15 @@ public class BlogPostService {
         return result;
     }
 
+    public Collection<BlogPost> findPostsByTag(String name) {
+        final var result = sink.findPostsByTag(name);
+        result.stream()
+          .map(BlogPost::getHashTags)
+          .flatMap(Collection::stream)
+          .forEach(hashTagResolver::resolve);
+        return result;
+    }
+
     public Optional<BlogPost> findPostById(long id) {
         final var result = sink.findPostById(id);
         result

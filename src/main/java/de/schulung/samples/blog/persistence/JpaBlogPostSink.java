@@ -30,6 +30,14 @@ public class JpaBlogPostSink implements BlogPostSink {
     }
 
     @Override
+    public Collection<BlogPost> findPostsByTag(String name) {
+        return repo.findByHashTags(name)
+          .stream()
+          .map(mapper::map)
+          .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<BlogPost> findPostById(long id) {
         return repo.findById(id)
           .map(mapper::map);

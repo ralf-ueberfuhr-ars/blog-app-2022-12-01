@@ -18,10 +18,12 @@
     <c:if test="${not empty post.hashTags}">
         <p style="font-size: 0.7em; font-family: monospace;">
             <c:forEach items="${post.hashTags}" var="hashTag">
+                <a href="?tag=${fn:escapeXml(hashTag.name)}">
                     <span style="margin-right: 0.5em;"
                           title="${fn:escapeXml(hashTag.description)}">
                         <c:out value="#${hashTag.name}"/>
                     </span>
+                </a>
             </c:forEach>
         </p>
     </c:if>
