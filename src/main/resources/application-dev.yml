@@ -3,3 +3,19 @@ blog-app:
   title: Blog Post App in DEV Stage!
 server:
   port: 9080
+spring:
+  datasource:
+    url: jdbc:h2:./.local-db/data
+  jpa:
+    generate-ddl: true
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2-console # http://localhost:9080/h2-console (leave username and password empty)
