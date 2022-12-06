@@ -3,3 +3,6 @@ blog-app:
   title: Blog Post App in DEV Stage!
 server:
   port: 9080
+logging:
+  level:
+    org.springframework.security: DEBUG
