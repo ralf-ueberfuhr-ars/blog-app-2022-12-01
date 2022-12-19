@@ -22,3 +22,9 @@ spring:
     console:
       enabled: true
       path: /h2-console # http://localhost:9080/h2-console (leave username and password empty)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+        #health,info,beans,metrics,startup
