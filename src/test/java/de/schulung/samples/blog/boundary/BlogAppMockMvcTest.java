@@ -1,9 +1,14 @@
 package de.schulung.samples.blog.boundary;
 
+import de.schulung.samples.blog.domain.BlogPostService;
+import de.schulung.samples.blog.domain.HashTagService;
 import de.schulung.samples.blog.shared.config.BlogAppConfigurationProperties;
 import de.schulung.samples.blog.shared.config.SecurityConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -38,7 +43,20 @@ import java.lang.annotation.Target;
   BlogAppConfigurationProperties.class,
   SecurityConfiguration.class,
 })
+@Import(BlogAppMockMvcTest.BoundaryMocksConfiguration.class)
 @WithMockUser(roles = "READER")
 @ActiveProfiles({ "test", "test-mockmvc" })
 public @interface BlogAppMockMvcTest {
+
+    @TestConfiguration
+    class BoundaryMocksConfiguration {
+
+        @MockBean
+        BlogPostService blogPostServiceMock;
+
+        @MockBean
+        HashTagService hashTagServiceMock;
+
+    }
+
 }
