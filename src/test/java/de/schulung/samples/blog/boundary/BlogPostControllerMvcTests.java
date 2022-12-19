@@ -3,10 +3,8 @@ package de.schulung.samples.blog.boundary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,12 +34,6 @@ class BlogPostControllerMvcTests {
     BlogPostService service;
     @Autowired
     MockMvc mvc;
-
-    @BeforeEach
-    void setup() {
-        // clean invocations during setup
-        Mockito.reset(service);
-    }
 
     /*
      * Request:
