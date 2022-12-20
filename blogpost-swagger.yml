@@ -18,7 +18,7 @@ paths:
     get:
       tags:
         - "blogpost"
-      summary: "Load all blog posts"
+      summary: "Read all blog posts"
       produces:
         - "application/json"
       responses:
@@ -58,6 +58,113 @@ paths:
           description: "The current user does not have AUTHOR role."
         "422":
           description: "Blog post is invalid"
+      security:
+        - blogpost_auth: [ ]
+  /posts/{id}:
+    get:
+      tags:
+        - "blogpost"
+      summary: "Read a single blog post"
+      produces:
+        - "application/json"
+      parameters:
+        - $ref: "#/parameters/blogPostId"
+      responses:
+        "200":
+          description: "Post was found"
+          schema:
+            $ref: "#/definitions/BlogPost"
+        "403":
+          description: "The current user does not have READER role."
+        "404":
+          description: "Blog post could not be found"
+      security:
+        - blogpost_auth: [ ]
+    delete:
+      tags:
+        - "blogpost"
+      summary: "Delete a single blog post"
+      parameters:
+        - $ref: "#/parameters/blogPostId"
+      responses:
+        "204":
+          description: "Post was deleted successfully"
+        "403":
+          description: "The current user does not have AUTHOR role or is not the author of the blog post.   
+          Anonymous blog posts can be deleted by every author."
+        "404":
+          description: "Post could not be found"
+      security:
+        - blogpost_auth: [ ]
+  /posts/{id}/tags:
+    get:
+      tags:
+        - "blogpost"
+        - "hashtag"
+      summary: "Read the hash tags of a single blog post"
+      produces:
+        - "application/json"
+      parameters:
+        - $ref: "#/parameters/blogPostId"
+      responses:
+        "200":
+          description: "Post was found"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/HashTag"
+        "403":
+          description: "The current user does not have READER role."
+        "404":
+          description: "Blog post could not be found"
+      security:
+        - blogpost_auth: [ ]
+    put:
+      tags:
+        - "blogpost"
+        - "hashtag"
+      summary: "Assign hash tags to a blog post"
+      consumes:
+        - "application/json"
+      parameters:
+        - $ref: "#/parameters/blogPostId"
+        - in: "body"
+          name: "tagNames"
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "204":
+          description: "Tags were successfully assigned"
+        "403":
+          description: "The current user does not have AUTHOR role."
+        "404":
+          description: "Blog post could not be found"
+      security:
+        - blogpost_auth: [ ]
+  /tags/{name}:
+    put:
+      tags:
+        - "hashtag"
+      summary: "Assign some metadata to a hash tag name"
+      consumes:
+        - "application/json"
+      parameters:
+        - $ref: "#/parameters/hashTagName"
+        - in: "body"
+          name: "hash tag"
+          schema:
+            $ref: "#/definitions/HashTag"
+      responses:
+        "201":
+          description: "The metadata was assigned for the first time"
+        "204":
+          description: "The metadata already existed and was successfully replaced"
+        "403":
+          description: "The current user does not have AUTHOR role."
+      security:
+        - blogpost_auth: [ ]
 securityDefinitions:
   blogpost_auth:
     type: "basic"
@@ -96,3 +203,16 @@ definitions:
         minLength: 1
     required:
       - description
+parameters:
+  blogPostId:
+    in: "path"
+    name: "id"
+    description: "The id of the blog post"
+    type: integer
+    required: true
+  hashTagName:
+    in: "path"
+    name: "name"
+    description: "The name of the hash tag"
+    type: string
+    required: true
