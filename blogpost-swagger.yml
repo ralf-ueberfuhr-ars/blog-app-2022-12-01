@@ -28,6 +28,10 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/BlogPost"
+        "403":
+          description: "The current user does not have READER role."
+      security:
+        - blogpost_auth: [ ]
     post:
       tags:
         - "blogpost"
@@ -50,8 +54,13 @@ paths:
             "Location":
               type: "string"
               description: URL to the newly created blog post
+        "403":
+          description: "The current user does not have AUTHOR role."
         "422":
           description: "Blog post is invalid"
+securityDefinitions:
+  blogpost_auth:
+    type: "basic"
 definitions:
   BlogPost:
     type: "object"
