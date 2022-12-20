@@ -120,13 +120,13 @@ class BlogPostApiTests {
           .isEqualTo("test-user");
     }
 
-    // TODO GET /posts/5 -> 200 + JSON (mit id=5)
     // TODO GET /posts/5 + kein Post mit ID=5  -> 404
+    // TODO GET /posts/5 -> 200 + JSON (mit id=5)
     // TODO GET /posts/gelbeKatze -> 400
-    // TODO DELETE /posts/5 + kein Post mit ID=5  -> 404
+    // TODO DELETE /posts/5 + AUTHOR + kein Post mit ID=5  -> 404
     // TODO DELETE /posts/5 + kein AUTHOR  -> 403
     // TODO DELETE /posts/5 + AUTHOR, aber nicht Autor des BlogPost  -> 403
-    // TODO DELETE /posts/5 + AUTHOR + Autor des BlogPosts -> 204
-    // TODO DELETE /posts/5 + AUTHOR + BlogPosts hat keinen Autor -> 204
+    // TODO DELETE /posts/5 + AUTHOR + Autor des BlogPosts -> 204 + service.removePost(...)
+    // TODO DELETE /posts/5 + AUTHOR + BlogPosts hat keinen Autor -> 204 + service.removePost(...)
     // TODO weitere Testfälle zu den HashTags ...
 }
