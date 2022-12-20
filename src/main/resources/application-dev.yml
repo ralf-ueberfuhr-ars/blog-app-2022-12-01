@@ -29,6 +29,8 @@ management:
         include: '*'
         #health,info,beans,metrics,startup
 springdoc:
+  paths-to-match:
+    - /api/**
   swagger-ui:
     enabled: true
     urls:
@@ -37,5 +39,3 @@ springdoc:
       - name: Code-Generated API
         url: /v3/api-docs
     urls-primary-name: Manually Configured API
-  paths-to-match:
-    - /api/**
