@@ -28,3 +28,14 @@ management:
       exposure:
         include: '*'
         #health,info,beans,metrics,startup
+springdoc:
+  swagger-ui:
+    enabled: true
+    urls:
+      - name: Manually Configured API
+        url: /blogpost-swagger.yml
+      - name: Code-Generated API
+        url: /v3/api-docs
+    urls-primary-name: Manually Configured API
+  paths-to-match:
+    - /api/**

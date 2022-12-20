@@ -1,6 +1,6 @@
 swagger: "2.0"
 info:
-  description: "Blog Post App REST API"
+  description: "Manage blog posts and assign hash tags"
   version: "1.0.0"
   title: "Blog Post API"
 host: "localhost:9080"

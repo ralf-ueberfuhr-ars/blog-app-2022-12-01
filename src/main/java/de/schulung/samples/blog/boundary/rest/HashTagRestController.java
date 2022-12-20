@@ -2,6 +2,7 @@ package de.schulung.samples.blog.boundary.rest;
 
 import de.schulung.samples.blog.domain.HashTag;
 import de.schulung.samples.blog.domain.HashTagService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/tags")
 @RequiredArgsConstructor
+@Tag(name = "hashtag")
 public class HashTagRestController {
 
     private final HashTagService service;

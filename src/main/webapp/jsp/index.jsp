@@ -15,6 +15,9 @@
 <ul>
     <li><a href="./h2-console">H2 Console</a></li>
     <li><a href="./actuator">Actuator</a></li>
+    <li><a href="./swagger-ui.html">Swagger UI (only DEV profile)</a></li>
+    <li><a href="./v3/api-docs">Open API v3 (generated from code)</a></li>
+    <li><a href="./blogpost-swagger.yml">Swagger v2 (manually configured)</a></li>
     <li><a href="./posts/view.html">Alle Posts (HTML view)</a></li>
     <li><a href="./posts/findall">Alle Posts (JSON)</a></li>
     <li><a href="./posts/find?id=1">Post mit ID 1 (JSON)</a></li>
