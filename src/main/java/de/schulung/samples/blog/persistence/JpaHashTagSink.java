@@ -16,6 +16,11 @@ public class JpaHashTagSink implements HashTagSink {
     private final HashTagEntityMapper mapper;
 
     @Override
+    public boolean exists(String name) {
+        return repo.existsById(name);
+    }
+
+    @Override
     public HashTag resolveByName(String name) {
         return repo.findById(name)
           .map(mapper::map)

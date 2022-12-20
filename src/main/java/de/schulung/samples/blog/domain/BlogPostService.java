@@ -58,4 +58,11 @@ public class BlogPostService {
         this.sink.removePost(id);
     }
 
+    public void update(@Valid BlogPost post, boolean updateTimeStamp) {
+        if (updateTimeStamp) {
+            post.setTimestamp(LocalDateTime.now());
+        }
+        this.sink.updatePost(post);
+    }
+
 }

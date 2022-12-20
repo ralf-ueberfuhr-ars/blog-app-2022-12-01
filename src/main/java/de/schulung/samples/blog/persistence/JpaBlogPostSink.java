@@ -54,4 +54,13 @@ public class JpaBlogPostSink implements BlogPostSink {
     public void removePost(long id) {
         repo.deleteById(id);
     }
+
+    @Override
+    public void updatePost(BlogPost post) {
+        repo.findById(post.getId())
+          .ifPresent(entity -> {
+              mapper.copy(post, entity);
+              repo.save(entity);
+          });
+    }
 }

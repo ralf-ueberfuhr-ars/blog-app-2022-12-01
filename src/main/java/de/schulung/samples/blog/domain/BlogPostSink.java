@@ -17,4 +17,5 @@ public interface BlogPostSink {
 
     void removePost(long id);
 
+    void updatePost(BlogPost post);
 }
