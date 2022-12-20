@@ -1,17 +1,22 @@
 package de.schulung.samples.blog.boundary.rest;
 
+import de.schulung.samples.blog.boundary.NotFoundException;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -36,7 +41,8 @@ public class BlogPostRestController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('READER')")
     public BlogPost findById(@PathVariable("id") long id) {
-        return null;
+        return service.findPostById(id)
+          .orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(
@@ -49,6 +55,20 @@ public class BlogPostRestController {
         service.addPost(post);
         URI location = linkTo(methodOn(BlogPostRestController.class).findById(post.getId())).toUri();
         return ResponseEntity.created(location).body(post);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('AUTHOR')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") long id, Authentication authentication) {
+        BlogPost blogPost = service.findPostById(id).orElseThrow(NotFoundException::new);
+        String currentUser = authentication.getName();
+        if (blogPost.getAuthor() == null || blogPost.getAuthor().equalsIgnoreCase(currentUser)) {
+            service.removePost(id);
+        } else {
+            throw new AccessDeniedException("blog post is managed by another author");
+        }
+
     }
 
 }

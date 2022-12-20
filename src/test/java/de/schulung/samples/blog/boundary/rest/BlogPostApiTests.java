@@ -16,12 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -120,13 +122,126 @@ class BlogPostApiTests {
           .isEqualTo("test-user");
     }
 
-    // TODO GET /posts/5 + kein Post mit ID=5  -> 404
-    // TODO GET /posts/5 -> 200 + JSON (mit id=5)
-    // TODO GET /posts/gelbeKatze -> 400
-    // TODO DELETE /posts/5 + AUTHOR + kein Post mit ID=5  -> 404
-    // TODO DELETE /posts/5 + kein AUTHOR  -> 403
-    // TODO DELETE /posts/5 + AUTHOR, aber nicht Autor des BlogPost  -> 403
-    // TODO DELETE /posts/5 + AUTHOR + Autor des BlogPosts -> 204 + service.removePost(...)
-    // TODO DELETE /posts/5 + AUTHOR + BlogPosts hat keinen Autor -> 204 + service.removePost(...)
+    // GET /posts/5 -> 200 + JSON (mit id=5)
+    @Test
+    void shouldReturn200OkOnReadExistingPost() throws Exception {
+        BlogPost post = BlogPost.builder()
+          .id(5L)
+          .title("test")
+          .content("testtesttest")
+          .timestamp(LocalDateTime.now())
+          .build();
+        when(service.findPostById(5L)).thenReturn(Optional.of(post));
+        mvc.perform(
+            get("/api/v1/posts/5")
+          )
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("id").value(5L));
+    }
+
+    // GET /posts/5 + kein Post mit ID=5  -> 404
+    @Test
+    void shouldReturn404NotFoundOnReadNonExistingPost() throws Exception {
+        when(service.findPostById(5L)).thenReturn(Optional.empty());
+        mvc.perform(
+            get("/api/v1/posts/5")
+          )
+          .andExpect(status().isNotFound());
+    }
+
+    // GET /posts/gelbeKatze -> 400
+    @Test
+    void shouldReturn400BadRequestOnReadPostWithInvalidId() throws Exception {
+        mvc.perform(
+            get("/api/v1/posts/gelbeKatze")
+          )
+          .andExpect(status().isBadRequest());
+    }
+
+    // DELETE /posts/gelbeKatze -> 400
+    @Test
+    @WithMockUser(value = "test-user", roles = "AUTHOR")
+    void shouldReturn400BadRequestOnDeletePostWithInvalidId() throws Exception {
+        mvc.perform(
+            delete("/api/v1/posts/gelbeKatze")
+          )
+          .andExpect(status().isBadRequest());
+    }
+
+    // DELETE /posts/5 + kein AUTHOR  -> 403
+    @Test
+    void shouldReturn403ForbiddenOnMissingAuthorRoleOnDeletePost() throws Exception {
+        mvc.perform(
+            delete("/api/v1/posts/5")
+          )
+          .andExpect(status().isForbidden());
+    }
+
+    // DELETE /posts/5 + AUTHOR + kein Post mit ID=5  -> 404
+    @Test
+    @WithMockUser(value = "test-user", roles = "AUTHOR")
+    void shouldReturn404NotFoundOnDeleteNonExistingPost() throws Exception {
+        when(service.findPostById(5L)).thenReturn(Optional.empty());
+        mvc.perform(
+            delete("/api/v1/posts/5")
+          )
+          .andExpect(status().isNotFound());
+    }
+
+    // DELETE /posts/5 + AUTHOR, aber nicht Autor des BlogPost  -> 403
+    @Test
+    @WithMockUser(value = "test-user", roles = "AUTHOR")
+    void shouldReturn403ForbiddenOnDeleteBlogPostOfAnotherAuthor() throws Exception {
+        BlogPost post = BlogPost.builder()
+          .id(5L)
+          .title("test")
+          .content("testtesttest")
+          .timestamp(LocalDateTime.now())
+          .author("another-user")
+          .build();
+        when(service.findPostById(5L)).thenReturn(Optional.of(post));
+        mvc.perform(
+            delete("/api/v1/posts/5")
+          )
+          .andExpect(status().isForbidden());
+    }
+
+    // DELETE /posts/5 + AUTHOR + Autor des BlogPosts -> 204 + service.removePost(...)
+    @Test
+    @WithMockUser(value = "test-user", roles = "AUTHOR")
+    void shouldReturn2xxSuccessfulOnDeleteOwnBlogPost() throws Exception {
+        BlogPost post = BlogPost.builder()
+          .id(5L)
+          .title("test")
+          .content("testtesttest")
+          .timestamp(LocalDateTime.now())
+          .author("test-user")
+          .build();
+        when(service.findPostById(5L)).thenReturn(Optional.of(post));
+        mvc.perform(
+            delete("/api/v1/posts/5")
+          )
+          .andExpect(status().is2xxSuccessful());
+        verify(service).removePost(5L);
+    }
+
+    // DELETE /posts/5 + AUTHOR + BlogPosts hat keinen Autor -> 204 + service.removePost(...)
+    @Test
+    @WithMockUser(value = "test-user", roles = "AUTHOR")
+    void shouldReturn2xxSuccessfulOnDeleteAnonymousBlogPost() throws Exception {
+        BlogPost post = BlogPost.builder()
+          .id(5L)
+          .title("test")
+          .content("testtesttest")
+          .timestamp(LocalDateTime.now())
+          // .author(null) --> default
+          .build();
+        when(service.findPostById(5L)).thenReturn(Optional.of(post));
+        mvc.perform(
+            delete("/api/v1/posts/5")
+          )
+          .andExpect(status().is2xxSuccessful());
+        verify(service).removePost(5L);
+    }
     // TODO weitere Testfälle zu den HashTags ...
 }
