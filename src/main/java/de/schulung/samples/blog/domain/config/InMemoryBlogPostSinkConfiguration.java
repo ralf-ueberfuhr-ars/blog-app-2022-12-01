@@ -31,10 +31,12 @@ public class InMemoryBlogPostSinkConfiguration {
 
         private static long counter = 0L;
 
+        @Override
         public int getCount() {
             return posts.size();
         }
 
+        @Override
         public Collection<BlogPost> findPosts() {
             return posts.values();
         }
@@ -49,18 +51,26 @@ public class InMemoryBlogPostSinkConfiguration {
               .collect(Collectors.toList());
         }
 
+        @Override
         public Optional<BlogPost> findPostById(long id) {
             return Optional.ofNullable(this.posts.get(id));
         }
 
+        @Override
         public void addPost(BlogPost post) {
             post.setId(counter++);
             post.setTimestamp(LocalDateTime.now());
             this.posts.put(post.getId(), post);
         }
 
+        @Override
         public void removePost(long id) {
             this.posts.remove(id);
+        }
+
+        @Override
+        public void updatePost(BlogPost post) {
+            this.posts.put(post.getId(), post);
         }
 
     }

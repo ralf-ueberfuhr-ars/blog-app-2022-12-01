@@ -27,6 +27,11 @@ public class InMemoryHashTagSinkConfiguration {
         private final Map<String, HashTag> tags = new HashMap<>();
 
         @Override
+        public boolean exists(String name) {
+            return tags.containsKey(name);
+        }
+
+        @Override
         public HashTag resolveByName(String name) {
             return tags.containsKey(name) ? tags.get(name) : HashTag.builder().name(name).build();
         }

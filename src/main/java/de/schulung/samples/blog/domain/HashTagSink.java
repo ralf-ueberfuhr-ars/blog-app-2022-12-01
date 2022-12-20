@@ -6,6 +6,13 @@ import java.util.Collection;
 public interface HashTagSink {
 
     /**
+     * Searches for the given hash tag name.
+     * @param name the hash tag name
+     * @return a flag indicating, whether the tag exists within the database
+     */
+    boolean exists(String name);
+
+    /**
      * Searches for a hash tag with a given name.
      * If there isn't any metadata existing, a hash tag with the name is
      * returned nevertheless.
