@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Setter
 public class CorsConfigurationProperties {
 
-    private String origins = "*";
+    private String[] origins = { "*" };
     private boolean credentials = false;
 
 }

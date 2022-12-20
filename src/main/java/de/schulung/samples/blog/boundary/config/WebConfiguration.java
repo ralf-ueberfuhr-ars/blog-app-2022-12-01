@@ -33,7 +33,7 @@ public class WebConfiguration {
                   .exposedHeaders(LOCATION, LINK)
                   .allowedHeaders(ORIGIN, CONTENT_TYPE, ACCEPT, ACCEPT_LANGUAGE, IF_MATCH, IF_NONE_MATCH, AUTHORIZATION)
                   .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS")
-                  .allowedOrigins(allowed.getOrigins().split(","))
+                  .allowedOrigins(allowed.getOrigins())
                   .allowCredentials(allowed.isCredentials());
             }
         };
