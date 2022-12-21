@@ -1,6 +1,5 @@
 package de.schulung.samples.blog.boundary.rest;
 
-import de.schulung.samples.blog.domain.HashTag;
 import de.schulung.samples.blog.domain.HashTagService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HashTagRestController {
 
     private final HashTagService service;
+    private final HashTagDtoMapper mapper;
 
     @PreAuthorize("hasRole('AUTHOR')")
     @PutMapping(
@@ -29,10 +29,11 @@ public class HashTagRestController {
     )
     public ResponseEntity<Void> save(
       @PathVariable("name") String name,
-      @RequestBody HashTag tag) {
+      @RequestBody HashTagDto tag) {
         final boolean existedBefore = service.exists(name);
         tag.setName(name);
-        service.save(tag);
+        var tagForDomain = mapper.map(tag);
+        service.save(tagForDomain);
         return ResponseEntity
           .status(existedBefore ? HttpStatus.NO_CONTENT : HttpStatus.CREATED)
           .build();
