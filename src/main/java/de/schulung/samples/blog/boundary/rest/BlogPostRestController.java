@@ -37,13 +37,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class BlogPostRestController {
 
     private final BlogPostService service;
+    private final BlogPostDtoMapper mapper;
 
     @GetMapping(
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('READER')")
-    public Collection<BlogPost> findAll() {
-        return service.findPosts();
+    public Collection<BlogPostDto> findAll() {
+        return service.findPosts()
+          .stream()
+          .map(mapper::map)
+          .collect(Collectors.toList());
     }
 
     @GetMapping(
@@ -51,8 +55,9 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('READER')")
-    public BlogPost findById(@PathVariable("id") long id) {
+    public BlogPostDto findById(@PathVariable("id") long id) {
         return service.findPostById(id)
+          .map(mapper::map)
           .orElseThrow(NotFoundException::new);
     }
 
@@ -61,13 +66,15 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('AUTHOR')")
-    public ResponseEntity<BlogPost> create(
-      @Valid @RequestBody BlogPost post,
+    public ResponseEntity<BlogPostDto> create(
+      @Valid @RequestBody BlogPostDto post,
       Authentication authentication
     ) {
         post.setAuthor(authentication.getName());
-        service.addPost(post);
-        URI location = linkTo(methodOn(BlogPostRestController.class).findById(post.getId())).toUri();
+        var postForDomain = mapper.map(post);
+        service.addPost(postForDomain);
+        var postForJson = mapper.map(postForDomain);
+        URI location = linkTo(methodOn(BlogPostRestController.class).findById(postForJson.getId())).toUri();
         return ResponseEntity.created(location).body(post);
     }
 
