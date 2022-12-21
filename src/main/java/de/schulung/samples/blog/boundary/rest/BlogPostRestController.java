@@ -4,6 +4,7 @@ import de.schulung.samples.blog.boundary.NotFoundException;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
 import de.schulung.samples.blog.domain.HashTag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,11 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('READER')")
-    public BlogPostDto findById(@PathVariable("id") long id) {
+    public BlogPostDto findById(
+      @Parameter(ref = "blogPostId")
+      @PathVariable("id")
+      long id
+    ) {
         return service.findPostById(id)
           .map(mapper::map)
           .orElseThrow(NotFoundException::new);
@@ -83,7 +88,12 @@ public class BlogPostRestController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") long id, Authentication authentication) {
+    public void delete(
+      @Parameter(ref = "blogPostId")
+      @PathVariable("id")
+      long id,
+      Authentication authentication
+    ) {
         BlogPost blogPost = service.findPostById(id).orElseThrow(NotFoundException::new);
         String currentUser = authentication.getName();
         if (blogPost.getAuthor() == null || blogPost.getAuthor().equalsIgnoreCase(currentUser)) {
@@ -100,7 +110,11 @@ public class BlogPostRestController {
     )
     @PreAuthorize("hasRole('READER')")
     @Tag(name = "hashtag")
-    public Collection<HashTag> findTagsForPost(@PathVariable("id") long id) {
+    public Collection<HashTag> findTagsForPost(
+      @Parameter(ref = "blogPostId")
+      @PathVariable("id")
+      long id
+    ) {
         return service.findPostById(id)
           .orElseThrow(NotFoundException::new)
           .getHashTags();
@@ -114,8 +128,11 @@ public class BlogPostRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Tag(name = "hashtag")
     public void updateTagsForPost(
-      @PathVariable("id") long id,
-      @RequestBody String[] tagNames
+      @Parameter(ref = "blogPostId")
+      @PathVariable("id")
+      long id,
+      @RequestBody
+      String[] tagNames
     ) {
         BlogPost blogPost = service.findPostById(id).orElseThrow(NotFoundException::new);
         blogPost.setHashTags(

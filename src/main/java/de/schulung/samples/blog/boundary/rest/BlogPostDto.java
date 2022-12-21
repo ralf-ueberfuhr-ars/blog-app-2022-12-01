@@ -1,6 +1,7 @@
 package de.schulung.samples.blog.boundary.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
+@Schema(name = "BlogPost")
 public class BlogPostDto {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

@@ -1,6 +1,8 @@
 package de.schulung.samples.blog.boundary.rest;
 
 import de.schulung.samples.blog.domain.HashTagService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,9 +29,13 @@ public class HashTagRestController {
       value = "/{name}",
       consumes = MediaType.APPLICATION_JSON_VALUE
     )
+    @Operation(summary = "Assign some metadata to a hash tag name")
     public ResponseEntity<Void> save(
-      @PathVariable("name") String name,
-      @RequestBody HashTagDto tag) {
+      @Parameter(ref = "hashTagName")
+      @PathVariable("name")
+      String name,
+      @RequestBody
+      HashTagDto tag) {
         final boolean existedBefore = service.exists(name);
         tag.setName(name);
         var tagForDomain = mapper.map(tag);
