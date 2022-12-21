@@ -4,6 +4,7 @@ import de.schulung.samples.blog.boundary.NotFoundException;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
 import de.schulung.samples.blog.domain.HashTag;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
+@Tag(name = "blogpost")
 public class BlogPostRestController {
 
     private final BlogPostService service;
@@ -97,6 +99,7 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('READER')")
+    @Tag(name = "hashtag")
     public Collection<HashTag> findTagsForPost(@PathVariable("id") long id) {
         return service.findPostById(id)
           .orElseThrow(NotFoundException::new)
@@ -109,6 +112,7 @@ public class BlogPostRestController {
     )
     @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Tag(name = "hashtag")
     public void updateTagsForPost(
       @PathVariable("id") long id,
       @RequestBody String[] tagNames
