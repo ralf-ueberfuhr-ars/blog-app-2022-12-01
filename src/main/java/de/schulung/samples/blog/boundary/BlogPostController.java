@@ -3,8 +3,8 @@ package de.schulung.samples.blog.boundary;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
 import de.schulung.samples.blog.domain.HashTag;
+import de.schulung.samples.blog.shared.config.SecurityRoles.OnlyAuthors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,7 +54,7 @@ public class BlogPostController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('AUTHOR')") // TODO create custom expression to check SecurityRole
+    @OnlyAuthors
     public String createBlogPost(
       @RequestParam("title")
       String title,
