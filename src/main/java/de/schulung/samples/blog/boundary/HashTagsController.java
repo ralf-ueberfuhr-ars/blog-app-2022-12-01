@@ -2,8 +2,8 @@ package de.schulung.samples.blog.boundary;
 
 import de.schulung.samples.blog.domain.HashTag;
 import de.schulung.samples.blog.domain.HashTagService;
+import de.schulung.samples.blog.shared.config.SecurityRoles.OnlyAuthors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +26,7 @@ public class HashTagsController {
         return service.findAll();
     }
 
-    @PreAuthorize("hasRole('AUTHOR')")
+    @OnlyAuthors
     @PostMapping("/save")
     public String save(
       @RequestParam("name")
