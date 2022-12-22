@@ -4,7 +4,11 @@ import de.schulung.samples.blog.boundary.NotFoundException;
 import de.schulung.samples.blog.domain.BlogPost;
 import de.schulung.samples.blog.domain.BlogPostService;
 import de.schulung.samples.blog.domain.HashTag;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,16 +40,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
-@Tag(name = "blogpost")
+@Tag(name = OpenApiConstants.TAG_BLOGPOST_NAME)
+@SecurityRequirement(name = OpenApiConstants.SECURITY_NAME)
 public class BlogPostRestController {
 
     private final BlogPostService service;
     private final BlogPostDtoMapper mapper;
 
-    @GetMapping(
-      produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('READER')")
+    @Operation(summary = "Read all blog posts")
+    @ApiResponse(responseCode = "200", description = "The todos were found and returned.")
+    @ApiResponse(responseCode = "403", description = "The current user does not have READER role.")
     public Collection<BlogPostDto> findAll() {
         return service.findPosts()
           .stream()
@@ -58,8 +64,12 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('READER')")
+    @Operation(summary = "Read a single blog post")
+    @ApiResponse(responseCode = "200", description = "Post was found")
+    @ApiResponse(responseCode = "403", description = "The current user does not have READER role.")
+    @ApiResponse(responseCode = "404", description = "Blog post could not be found")
     public BlogPostDto findById(
-      @Parameter(ref = "blogPostId")
+      @Parameter(ref = OpenApiConstants.BLOGPOST_ID_PARAMETER)
       @PathVariable("id")
       long id
     ) {
@@ -73,8 +83,16 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('AUTHOR')")
+    @Operation(summary = "Create a blog post")
+    @ApiResponse(responseCode = "201", description = "Post was created successfully",
+      headers = @Header(name = "Location", description = "URL to the newly created blog post")
+    )
+    @ApiResponse(responseCode = "403", description = "The current user does not have AUTHOR role.")
+    @ApiResponse(responseCode = "422", description = "Blog post is invalid")
     public ResponseEntity<BlogPostDto> create(
-      @Valid @RequestBody BlogPostDto post,
+      @Valid
+      @RequestBody
+      BlogPostDto post,
       Authentication authentication
     ) {
         post.setAuthor(authentication.getName());
@@ -88,8 +106,15 @@ public class BlogPostRestController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete a single blog post")
+    @ApiResponse(responseCode = "204", description = "Post was deleted successfully")
+    @ApiResponse(responseCode = "403",
+      description = "The current user does not have AUTHOR role or is not the author of the blog post. "
+        + "Anonymous blog posts can be deleted by every author."
+    )
+    @ApiResponse(responseCode = "404", description = "Post could not be found")
     public void delete(
-      @Parameter(ref = "blogPostId")
+      @Parameter(ref = OpenApiConstants.BLOGPOST_ID_PARAMETER)
       @PathVariable("id")
       long id,
       Authentication authentication
@@ -109,9 +134,13 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @PreAuthorize("hasRole('READER')")
-    @Tag(name = "hashtag")
+    @Tag(name = OpenApiConstants.TAG_HASHTAG_NAME)
+    @Operation(summary = "Read the hash tags of a single blog post")
+    @ApiResponse(responseCode = "200", description = "Post was found")
+    @ApiResponse(responseCode = "403", description = "The current user does not have READER role.")
+    @ApiResponse(responseCode = "404", description = "Post could not be found")
     public Collection<HashTag> findTagsForPost(
-      @Parameter(ref = "blogPostId")
+      @Parameter(ref = OpenApiConstants.BLOGPOST_ID_PARAMETER)
       @PathVariable("id")
       long id
     ) {
@@ -126,9 +155,13 @@ public class BlogPostRestController {
     )
     @PreAuthorize("hasRole('AUTHOR')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Tag(name = "hashtag")
+    @Tag(name = OpenApiConstants.TAG_HASHTAG_NAME)
+    @Operation(summary = "Assign hash tags to a blog post")
+    @ApiResponse(responseCode = "204", description = "Tags were successfully assigned")
+    @ApiResponse(responseCode = "403", description = "The current user does not have AUTHOR role.")
+    @ApiResponse(responseCode = "404", description = "Post could not be found")
     public void updateTagsForPost(
-      @Parameter(ref = "blogPostId")
+      @Parameter(ref = OpenApiConstants.BLOGPOST_ID_PARAMETER)
       @PathVariable("id")
       long id,
       @RequestBody

@@ -16,31 +16,6 @@ public class OpenApiConfiguration {
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
-          .components(
-            new Components()
-              .addSecuritySchemes(
-                "blogpost_auth",
-                new SecurityScheme().type(SecurityScheme.Type.HTTP)
-              )
-              .addParameters(
-                "  blogPostId",
-                new Parameter()
-                  .in("path")
-                  .name("id")
-                  .description("The id of the blog post")
-                  .schema(new Schema<Integer>().type("integer"))
-                  .required(true)
-              )
-              .addParameters(
-                "hashTagName",
-                new Parameter()
-                  .in("path")
-                  .name("name")
-                  .description("The name of the hash tag")
-                  .schema(new Schema<String>().type("string"))
-                  .required(true)
-              )
-          )
           .info(
             new Info()
               .title("Blog Post API")
@@ -49,13 +24,40 @@ public class OpenApiConfiguration {
           )
           .addTagsItem(
             new Tag()
-              .name("blogpost")
+              .name(OpenApiConstants.TAG_BLOGPOST_NAME)
               .description("Everything about your blog posts")
           )
           .addTagsItem(
             new Tag()
-              .name("hashtag")
+              .name(OpenApiConstants.TAG_HASHTAG_NAME)
               .description("Everything about the hash tags")
+          )
+          .components(
+            new Components()
+              .addParameters(
+                OpenApiConstants.BLOGPOST_ID_PARAMETER,
+                new Parameter()
+                  .in("path")
+                  .name("id")
+                  .description("The id of the blog post")
+                  .schema(new Schema<Integer>().type("integer"))
+                  .required(true)
+              )
+              .addParameters(
+                OpenApiConstants.HASHTAG_NAME_PARAMETER,
+                new Parameter()
+                  .in("path")
+                  .name("name")
+                  .description("The name of the hash tag")
+                  .schema(new Schema<String>().type("string"))
+                  .required(true)
+              )
+              .addSecuritySchemes(
+                OpenApiConstants.SECURITY_NAME,
+                new SecurityScheme()
+                  .type(SecurityScheme.Type.HTTP)
+                  .scheme("basic")
+              )
           );
     }
 

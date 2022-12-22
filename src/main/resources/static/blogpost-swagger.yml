@@ -43,6 +43,7 @@ paths:
       parameters:
         - in: "body"
           name: "newPost"
+          required: true
           schema:
             $ref: "#/definitions/BlogPost"
       responses:
@@ -130,6 +131,7 @@ paths:
         - $ref: "#/parameters/blogPostId"
         - in: "body"
           name: "tagNames"
+          required: true
           schema:
             type: array
             items:
@@ -154,6 +156,7 @@ paths:
         - $ref: "#/parameters/hashTagName"
         - in: "body"
           name: "hash tag"
+          required: true
           schema:
             $ref: "#/definitions/HashTag"
       responses:
