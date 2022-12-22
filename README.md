@@ -22,8 +22,10 @@
 ## Anwendung starten
 
 - main-Methode starten
-- `http://localhost:9080/` (WhiteLabel Error Page)
-- `http://localhost:9080/posts/findall`
+- `http://localhost:9080/` (Startseite mit Links)
+- Anmelden mit Username / Passwort
+  - `user1` / `user1` (nur Leseberechtigungen mit Rolle `READER`)
+  - `user2` / `user2` (Schreibberechtigungen mit Rolle `AUTHOR`)
 
 oder:
 
