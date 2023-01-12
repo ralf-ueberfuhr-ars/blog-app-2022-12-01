@@ -49,7 +49,7 @@ public class BlogPostRestController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @OnlyApiReaders
     @Operation(summary = "Read all blog posts")
-    @ApiResponse(responseCode = "200", description = "The todos were found and returned.")
+    @ApiResponse(responseCode = "200", description = "The blog posts were found and returned.")
     public Collection<BlogPostDto> findAll() {
         return service.findPosts()
           .stream()
