@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -21,6 +22,7 @@ public class WebSecurityConfiguration {
          *  - Swagger UI uses Authentication header automatically, but browser does not
          */
         return http
+                .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(withDefaults())
                 .httpBasic(withDefaults())
                 // disable sessions -> good for REST API, bad for classic web (stores auth)
