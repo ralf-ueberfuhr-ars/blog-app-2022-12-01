@@ -1,221 +1,264 @@
-swagger: "2.0"
+openapi: 3.0.1
 info:
-  description: "Manage blog posts and assign hash tags"
-  version: "1.0.0"
-  title: "Blog Post API"
-host: "localhost:9080"
-basePath: "/api/v1"
+  title: Blog Post API
+  description: Manage blog posts and assign hash tags
+  version: 1.0.0
+servers:
+  - url: https://localhost:9080/api/v1
+  - url: http://localhost:9080/api/v1
 tags:
-  - name: "blogpost"
-    description: "Everything about your blog posts"
-  - name: "hashtag"
-    description: "Everything about the hash tags"
-schemes:
-  - "https"
-  - "http"
+  - name: blogpost
+    description: Everything about your blog posts
+  - name: hashtag
+    description: Everything about the hash tags
 paths:
   /posts:
     get:
       tags:
-        - "blogpost"
-      summary: "Read all blog posts"
-      produces:
-        - "application/json"
+        - blogpost
+      summary: Read all blog posts
       responses:
-        "200":
-          description: "Posts were loaded successfully"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/BlogPost"
-        "403":
-          description: "The current user does not have READER role."
+        200:
+          description: Posts were loaded successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlogPost'
+        403:
+          description: The current user does not have READER role.
+          content: {}
       security:
-        - blogpost_auth: [ ]
+        - blogpost_auth: []
     post:
       tags:
-        - "blogpost"
-      summary: "Create a blog post"
-      consumes:
-        - "application/json"
-      produces:
-        - "application/json"
-      parameters:
-        - in: "body"
-          name: "newPost"
-          required: true
-          schema:
-            $ref: "#/definitions/BlogPost"
+        - blogpost
+      summary: Create a blog post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BlogPost'
+        required: true
       responses:
-        "201":
-          description: "Post was created successfully"
-          schema:
-            $ref: "#/definitions/BlogPost"
+        201:
+          description: Post was created successfully
           headers:
-            "Location":
-              type: "string"
+            Location:
               description: URL to the newly created blog post
-        "403":
-          description: "The current user does not have AUTHOR role."
-        "422":
-          description: "Blog post is invalid"
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+        403:
+          description: The current user does not have AUTHOR role.
+          content: {}
+        422:
+          description: Blog post is invalid
+          content: {}
       security:
-        - blogpost_auth: [ ]
+        - blogpost_auth: []
+      x-codegen-request-body-name: newPost
   /posts/{id}:
     get:
       tags:
-        - "blogpost"
-      summary: "Read a single blog post"
-      produces:
-        - "application/json"
+        - blogpost
+      summary: Read a single blog post
       parameters:
-        - $ref: "#/parameters/blogPostId"
-      responses:
-        "200":
-          description: "Post was found"
+        - name: id
+          in: path
+          description: The id of the blog post
+          required: true
           schema:
-            $ref: "#/definitions/BlogPost"
-        "403":
-          description: "The current user does not have READER role."
-        "404":
-          description: "Blog post could not be found"
+            type: integer
+      responses:
+        200:
+          description: Post was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+        403:
+          description: The current user does not have READER role.
+          content: {}
+        404:
+          description: Blog post could not be found
+          content: {}
       security:
-        - blogpost_auth: [ ]
+        - blogpost_auth: []
     delete:
       tags:
-        - "blogpost"
-      summary: "Delete a single blog post"
+        - blogpost
+      summary: Delete a single blog post
       parameters:
-        - $ref: "#/parameters/blogPostId"
+        - name: id
+          in: path
+          description: The id of the blog post
+          required: true
+          schema:
+            type: integer
       responses:
-        "204":
-          description: "Post was deleted successfully"
-        "403":
-          description: "The current user does not have AUTHOR role or is not the author of the blog post.   
-          Anonymous blog posts can be deleted by every author."
-        "404":
-          description: "Post could not be found"
+        204:
+          description: Post was deleted successfully
+          content: {}
+        403:
+          description: The current user does not have AUTHOR role or is not the author
+            of the blog post. Anonymous blog posts can be deleted by every author.
+          content: {}
+        404:
+          description: Post could not be found
+          content: {}
       security:
-        - blogpost_auth: [ ]
+        - blogpost_auth: []
   /posts/{id}/tags:
     get:
       tags:
-        - "blogpost"
-        - "hashtag"
-      summary: "Read the hash tags of a single blog post"
-      produces:
-        - "application/json"
+        - blogpost
+        - hashtag
+      summary: Read the hash tags of a single blog post
       parameters:
-        - $ref: "#/parameters/blogPostId"
-      responses:
-        "200":
-          description: "Post was found"
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/HashTag"
-        "403":
-          description: "The current user does not have READER role."
-        "404":
-          description: "Blog post could not be found"
-      security:
-        - blogpost_auth: [ ]
-    put:
-      tags:
-        - "blogpost"
-        - "hashtag"
-      summary: "Assign hash tags to a blog post"
-      consumes:
-        - "application/json"
-      parameters:
-        - $ref: "#/parameters/blogPostId"
-        - in: "body"
-          name: "tagNames"
+        - name: id
+          in: path
+          description: The id of the blog post
           required: true
           schema:
-            type: array
-            items:
-              type: string
+            type: integer
       responses:
-        "204":
-          description: "Tags were successfully assigned"
-        "403":
-          description: "The current user does not have AUTHOR role."
-        "404":
-          description: "Blog post could not be found"
+        200:
+          description: Post was found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HashTag'
+        403:
+          description: The current user does not have READER role.
+          content: {}
+        404:
+          description: Blog post could not be found
+          content: {}
       security:
-        - blogpost_auth: [ ]
+        - blogpost_auth: []
+    put:
+      tags:
+        - blogpost
+        - hashtag
+      summary: Assign hash tags to a blog post
+      parameters:
+        - name: id
+          in: path
+          description: The id of the blog post
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+        required: true
+      responses:
+        204:
+          description: Tags were successfully assigned
+          content: {}
+        403:
+          description: The current user does not have AUTHOR role.
+          content: {}
+        404:
+          description: Blog post could not be found
+          content: {}
+      security:
+        - blogpost_auth: []
+      x-codegen-request-body-name: tagNames
   /tags/{name}:
     put:
       tags:
-        - "hashtag"
-      summary: "Assign some metadata to a hash tag name"
-      consumes:
-        - "application/json"
+        - hashtag
+      summary: Assign some metadata to a hash tag name
       parameters:
-        - $ref: "#/parameters/hashTagName"
-        - in: "body"
-          name: "hash tag"
+        - name: name
+          in: path
+          description: The name of the hash tag
           required: true
           schema:
-            $ref: "#/definitions/HashTag"
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HashTag'
+        required: true
       responses:
-        "201":
-          description: "The metadata was assigned for the first time"
-        "204":
-          description: "The metadata already existed and was successfully replaced"
-        "403":
-          description: "The current user does not have AUTHOR role."
+        201:
+          description: The metadata was assigned for the first time
+          content: {}
+        204:
+          description: The metadata already existed and was successfully replaced
+          content: {}
+        403:
+          description: The current user does not have AUTHOR role.
+          content: {}
       security:
-        - blogpost_auth: [ ]
-securityDefinitions:
-  blogpost_auth:
-    type: "basic"
-definitions:
-  BlogPost:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-        readOnly: true
-      title:
-        type: "string"
-        minLength: 3
-      content:
-        type: "string"
-        minLength: 10
-      timestamp:
-        type: "string"
-        format: "date-time"
-        readOnly: true
-      author:
-        type: "string"
-        readOnly: true
-    required:
-      - title
-      - content
-  HashTag:
-    type: "object"
-    properties:
-      name:
-        type: "string"
-        readOnly: true
-      description:
-        type: "string"
-        minLength: 1
-    required:
-      - description
-parameters:
-  blogPostId:
-    in: "path"
-    name: "id"
-    description: "The id of the blog post"
-    type: integer
-    required: true
-  hashTagName:
-    in: "path"
-    name: "name"
-    description: "The name of the hash tag"
-    type: string
-    required: true
+        - blogpost_auth: []
+      x-codegen-request-body-name: hash tag
+components:
+  schemas:
+    BlogPost:
+      required:
+        - content
+        - title
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        title:
+          minLength: 3
+          type: string
+        content:
+          minLength: 10
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+          readOnly: true
+        author:
+          type: string
+          readOnly: true
+    HashTag:
+      required:
+        - description
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        description:
+          minLength: 1
+          type: string
+  parameters:
+    blogPostId:
+      name: id
+      in: path
+      description: The id of the blog post
+      required: true
+      schema:
+        type: integer
+    hashTagName:
+      name: name
+      in: path
+      description: The name of the hash tag
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    blogpost_auth:
+      type: http
+      scheme: basic

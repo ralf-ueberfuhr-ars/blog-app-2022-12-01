@@ -1,6 +1,6 @@
 package de.schulung.samples.blog.domain;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.Collection;
 
 public interface HashTagSink {

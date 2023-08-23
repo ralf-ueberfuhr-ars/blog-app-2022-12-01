@@ -6,6 +6,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfiguration {
@@ -18,17 +21,14 @@ public class WebSecurityConfiguration {
          *  - Swagger UI uses Authentication header automatically, but browser does not
          */
         return http
-          .formLogin()
-          .and()
-          .httpBasic()
-          // disable sessions -> good for REST API, bad for classic web (stores auth)
-          //.and()
-          //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-          .and()
-          .authorizeHttpRequests()
-          .anyRequest().authenticated()
-          .and()
-          .csrf().ignoringAntMatchers("/api/**").and().build();
+                .formLogin(withDefaults())
+                .httpBasic(withDefaults())
+                // disable sessions -> good for REST API, bad for classic web (stores auth)
+                //.and()
+                //.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
+                .csrf(csrf -> csrf.ignoringRequestMatchers(antMatcher("/api/**")))
+                .build();
     }
 
 }
