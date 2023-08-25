@@ -45,3 +45,19 @@ Mit `dev-Profil:
 ```bash
 java -jar target/blog-app-0.0.1-SNAPSHOT.jar -Dspring.profiles.active=dev
 ```
+
+## Anwendung bauen
+
+Gebaut wird wie üblich mit
+
+```bash
+mvn clean package
+```
+
+Es gibt jedoch die Möglichkeit, für AWS-Lambda zu bauen. Momentan wird dabei die Security
+angepasst, sodass anonyme Zugriffe möglich sind.
+
+```bash
+mvn clean package -Paws-lambda
+```
+

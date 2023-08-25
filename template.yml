@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+
+Resources:
+  BlogPostAppFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: de.schulung.samples.blog.BlogAppLambdaHandler::handleRequest
+      Runtime: java17
+      CodeUri: s3://blog-posts-resources/blog-app-0.0.1-SNAPSHOT.jar
+      MemorySize: 512
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 60
+      Events:
+        ProxyResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+
+Outputs:
+  BlogPostApi:
+    Description: URL for application
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/posts'
+    Export:
+      Name: BlogPostApi

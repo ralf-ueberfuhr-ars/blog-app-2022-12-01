@@ -9,6 +9,8 @@ import de.schulung.samples.blog.domain.HashTag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -80,7 +85,17 @@ public class BlogPostRestController {
       produces = MediaType.APPLICATION_JSON_VALUE
     )
     @OnlyApiAuthors
-    @Operation(summary = "Create a blog post")
+    @Operation(
+            summary = "Create a blog post",
+            // Bug: SecurityContext is interpreted as part of the body
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(
+                           schema = @Schema(
+                                    implementation = BlogPostDto.class
+                            )
+                    )
+            )
+    )
     @ApiResponse(responseCode = "201", description = "Post was created successfully",
       headers = @Header(name = "Location", description = "URL to the newly created blog post")
     )
@@ -89,9 +104,12 @@ public class BlogPostRestController {
       @Valid
       @RequestBody
       BlogPostDto post,
-      Authentication authentication
+      @CurrentSecurityContext
+      SecurityContext context
     ) {
-        post.setAuthor(authentication.getName());
+        Optional.ofNullable(context.getAuthentication())
+                .map(Authentication::getName)
+                .ifPresent(post::setAuthor);
         var postForDomain = mapper.map(post);
         service.addPost(postForDomain);
         var postForJson = mapper.map(postForDomain);

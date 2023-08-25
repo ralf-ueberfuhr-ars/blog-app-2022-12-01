@@ -23,7 +23,7 @@ public enum SecurityRoles {
     @Inherited
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
-    @PreAuthorize("hasRole('AUTHOR')")
+    @PreAuthorize("hasRole('AUTHOR') or isAnonymous()")
     public @interface OnlyAuthors {
 
     }
@@ -32,7 +32,7 @@ public enum SecurityRoles {
     @Inherited
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ ElementType.METHOD, ElementType.TYPE, ElementType.ANNOTATION_TYPE })
-    @PreAuthorize("hasRole('READER')")
+    @PreAuthorize("hasRole('READER') or isAnonymous()")
     public @interface OnlyReaders {
 
     }

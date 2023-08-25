@@ -193,6 +193,8 @@
                                     <artifactSet>
                                         <excludes>
                                             <exclude>org.apache.tomcat.embed:*</exclude>
+                                            <exclude>org.projectlombok:*</exclude>
+                                            <exclude>org.mapstruct:*</exclude>
                                         </excludes>
                                     </artifactSet>
                                 </configuration>
